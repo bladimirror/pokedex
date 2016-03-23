@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Gotta Catch'em All</title>
+        <link rel="stylesheet" type="text/css" href="pokemon_css.css"/>
+        <!-- BOOTSTRAP -->
+            <!-- Latest compiled and minified CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+            <!-- Optional theme -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+            <!-- Latest compiled and minified JavaScript -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+        <!--JQUERY LIBRARY CALL-->
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+        <!--START API CALL SCRIPT-->
+        <script>
+            $(document).ready(function(){
+
+                <!--LOAD ALL POKEMON IMAGES-->
+                for(var i=1; i < 152; i++){
+                    url = "http://pokeapi.co/media/img/" + String(i) + ".png";
+
+                    var html_img = "<img id='" + String(i) + "'src='" + url +"' alt='NO IMAGE'>";
+                    console.log('Loading Pokemon...');
+                    $("#pokemon").append(html_img);
+                } 
+                <!--END FOR-->
+
+                console.log('Out of FOR loop...');
+                
+                <!--DISPLAY SELECTED POKEMON FROM POKEDEX CODE-->
+                $('img').click(function(){
+                    var id = $(this).attr('id'); //grabs the ID for the selected IMG
+                    console.log(id);
+                    var poke_info = ""; //variable to create image tag that will be inserted into POKEDEX div
+                    $.get("http://pokeapi.co/api/v1/pokemon/" + id, function(res){
+                        poke_info += "<img id='get_pic' src='http://pokeapi.co/media/img/" + id + ".png' alt='NO IMAGE'>";
+                        console.log("pic " + poke_info)
+                        poke_info += "<div id='get_info'> <ul>";
+                        poke_info += "<li> Name: " + res.name + "</li>";
+                        poke_info += "<li> HP: " + res.hp + "</li>";
+                        poke_info += "<li> Attack: " + res.attack + "</li>";
+
+                        for(var i=0; i < res.abilities.length; i++){
+                            poke_info += "<li> Ability " + (i+1) + ": " + res.abilities[i].name + "</li>";
+                        }
+
+                        poke_info += "<li> Defense: " + res.defense + "</li>";
+                        poke_info += "</ul></div>";
+
+                        $('#pokedex').html(poke_info);
+                    }, "json");
+                });
+            })
+        </script> <!--END API CALL SCRIPT-->
+    </head>
+
+    <body>
+        <div id='container'>
+            <div id="pokedex">
+            </div>
+            <div id="pokemon">
+            </div>
+            <iframe width="100%" height="150" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/78536854&amp;auto_play=true&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
+       
+        </div>
+    </body>
+</html>
